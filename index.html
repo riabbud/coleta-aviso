@@ -150,13 +150,16 @@ class Component extends DCLogic {
       videoSrc: 'video.mp4',
       videoPoster: 'video-poster.jpg',
       setVid: (el) => {
-        if (el && el !== this.vid) {
-          this.vid = el;
+        if (!el) return;
+        this.vid = el;
+        if (!el.__iniciado) {
+          el.__iniciado = true;
           el.muted = true;
           const p = el.play();
           if (p && p.catch) p.catch(() => {});
+        } else {
+          el.muted = !this.state.som;
         }
-        if (!el) this.vid = null;
       },
       onVidTime: (e) => {
         const t = e.currentTarget.currentTime || 0;
@@ -170,6 +173,7 @@ class Component extends DCLogic {
         const on = !this.state.som;
         if (this.vid) {
           this.vid.muted = !on;
+          this.vid.volume = 1;
           const p = this.vid.play();
           if (p && p.catch) p.catch(() => {});
         }
